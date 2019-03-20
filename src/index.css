@@ -1,0 +1,44 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "proxima_nova_rgregular",Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: "source-code-pro", "Menlo", "Monaco", "Consolas", "Courier New",
+    monospace;
+}
+
+.topBar {
+  display: flex;
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0,#4c9915), color-stop(0.75,#65b31c));
+  color: white;
+}
+
+.title {
+  padding: 18px;
+  padding-left: 36px;
+}
+
+.searchbar {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  width: 30%;
+}
+
+.searchTitle {
+  margin: 8px;
+}
+
+
+.SimpleTabs-root-37 {
+  background-color: white;
+}
+
+.MuiAppBar-colorPrimary-45 {
+  background-color: white;
+  color: black;
+}
