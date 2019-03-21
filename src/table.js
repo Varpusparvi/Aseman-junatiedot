@@ -11,11 +11,21 @@ class Table extends React.Component {
 
   scheduledTime(object, bool) {
     let scheduledTime;
+    let actualTime;
     if (bool === true) {  // If calculating arrival
       for (let i = 0; i < object.timeTableRows.length; i++) {
         if (object.timeTableRows[i].stationShortCode === this.props.searchedShortCode &&
             object.timeTableRows[i].type === "ARRIVAL") {
-            scheduledTime = object.timeTableRows[i].scheduledTime;
+              if (object.timeTableRows[i].actualTime !== undefined && object.timeTableRows[i].actualTime !== null) {
+                actualTime = new Date(object.timeTableRows[i].actualTime);
+                scheduledTime = new Date(object.timeTableRows[i].scheduledTime);
+              } else {
+                scheduledTime = new Date(object.timeTableRows[i].scheduledTime);
+              }
+            if (actualTime !== undefined) {
+              actualTime = formatDate(actualTime, "Europe/Helsinki");
+              actualTime = convertTimeToString(actualTime);
+            }
             scheduledTime = formatDate(scheduledTime, "Europe/Helsinki");
             scheduledTime = convertTimeToString(scheduledTime);
         }
@@ -24,24 +34,33 @@ class Table extends React.Component {
       for (let i = 0; i < object.timeTableRows.length; i++) {
         if (object.timeTableRows[i].stationShortCode === this.props.searchedShortCode &&
             object.timeTableRows[i].type === "DEPARTURE") {
-            scheduledTime = object.timeTableRows[i].scheduledTime;
+              if (object.timeTableRows[i].actualTime !== undefined && object.timeTableRows[i].actualTime !== null) {
+                actualTime = new Date(object.timeTableRows[i].actualTime);
+                scheduledTime = new Date(object.timeTableRows[i].scheduledTime);
+              } else {
+                scheduledTime = new Date(object.timeTableRows[i].scheduledTime);
+              }
+            if (actualTime !== undefined) {
+              actualTime = formatDate(actualTime, "Europe/Helsinki");
+              actualTime = convertTimeToString(actualTime);
+            }
             scheduledTime = formatDate(scheduledTime, "Europe/Helsinki");
             scheduledTime = convertTimeToString(scheduledTime);
         }
       }
     }
-
     return(
       <div>
-        {scheduledTime}
+        <div className="actualTime">{actualTime}</div>
+        <div>{scheduledTime}</div>
       </div>
     );
   }
 
   getStationName(stationShortCode) {
-    for (let i = 0; i < this.props.passengerStations.length; i++) {
-      if (stationShortCode === this.props.passengerStations[i].stationShortCode) {
-        let stationName = this.props.passengerStations[i].stationName;
+    for (let i = 0; i < this.props.stations.length; i++) {
+      if (stationShortCode === this.props.stations[i].stationShortCode) {
+        let stationName = this.props.stations[i].stationName;
         return (
           <div>
             {stationName}
@@ -64,7 +83,7 @@ class Table extends React.Component {
           </tr>
         {this.props.trainsArriving.map((x) => 
             <tr key={x.trainNumber}>
-              <td><div>{x.trainNumber} {x.trainType}</div></td>
+              <td><div>{x.trainType} {x.trainNumber}</div></td>
               <td>{this.getStationName(x.timeTableRows[0].stationShortCode)}</td>
               <td>{this.getStationName(x.timeTableRows[x.timeTableRows.length - 1].stationShortCode)}</td>
               <td>{this.scheduledTime(x, true)}</td>
@@ -84,7 +103,7 @@ class Table extends React.Component {
           </tr>
         {this.props.trainsDeparting.map((x) => 
             <tr key={x.trainNumber}>
-              <td><div>{x.trainNumber} {x.trainType}</div></td>
+              <td><div>{x.trainType} {x.trainNumber}</div></td>
               <td>{this.getStationName(x.timeTableRows[0].stationShortCode)}</td>
               <td>{this.getStationName(x.timeTableRows[x.timeTableRows.length - 1].stationShortCode)}</td>
               <td>{this.scheduledTime(x, false)}</td>
@@ -111,7 +130,7 @@ function formatDate(date, timezone) {
 * Converts the date in ISO8601 format into a time within a day
 */
 function convertTimeToString(ISO8601) {
-  let string = ISO8601.slice(11,13) + ':' + ISO8601.slice(14,16) + ' ' + 
-  ISO8601.slice(8,10) + '.' + ISO8601.slice(5,7) + '.' + ISO8601.slice(0,4);
+  let string = ISO8601.slice(11,13) + ':' + ISO8601.slice(14,16)/* + ' ' + 
+  ISO8601.slice(8,10) + '.' + ISO8601.slice(5,7) + '.' + ISO8601.slice(0,4)*/;
   return string;
 }

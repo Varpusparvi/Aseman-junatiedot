@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Junatiedot from './Junatiedot';
+import TrainInfo from './TrainInfo';
 
-ReactDOM.render(<Junatiedot />, document.getElementById('root'));
+ReactDOM.render(<TrainInfo />, document.getElementById('root'));

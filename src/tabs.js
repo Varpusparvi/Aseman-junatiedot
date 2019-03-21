@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, withTheme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
+import { withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Table from "./table";
+import Table from './table';
 
 function TabContainer(props) {
   return (
@@ -22,20 +21,16 @@ TabContainer.propTypes = {
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
   },
 });
 
 class SimpleTabs extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          value: 0,
-        };
+  state = {
+    value: 0,
+  };
 
-        this.handleChange = this.handleChange.bind(this);        
-    }
-
-  handleChange(event, value) {
+  handleChange = (event, value) => {
     this.setState({ value });
   };
 
@@ -45,21 +40,19 @@ class SimpleTabs extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
           <Tabs value={value} onChange={this.handleChange}>
             <Tab label="Saapuvat" />
             <Tab label="Lähtevät" />
           </Tabs>
-        </AppBar>
         {value === 0 && <TabContainer>
                           <Table  value={this.state.value}
                                   searchedShortCode={this.props.searchedShortCode}
-                                  passengerStations={this.props.passengerStations}
+                                  stations={this.props.stations}
                                   trainsArriving={this.props.trainsArriving}></Table></TabContainer>}
         {value === 1 && <TabContainer>
                           <Table  value={this.state.value} 
                                   searchedShortCode={this.props.searchedShortCode}
-                                  passengerStations={this.props.passengerStations} 
+                                  stations={this.props.stations} 
                                   trainsDeparting={this.props.trainsDeparting}></Table></TabContainer>}
       </div>
     );
