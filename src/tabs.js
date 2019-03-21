@@ -22,7 +22,6 @@ TabContainer.propTypes = {
 const styles = theme => ({
   root: {
     flexGrow: 1,
-
   },
 });
 
@@ -31,7 +30,6 @@ class SimpleTabs extends React.Component {
         super(props);
         this.state = {
           value: 0,
-          trains: []
         };
 
         this.handleChange = this.handleChange.bind(this);        
@@ -53,8 +51,16 @@ class SimpleTabs extends React.Component {
             <Tab label="Lähtevät" />
           </Tabs>
         </AppBar>
-        {value === 0 && <TabContainer><Table trainsArriving={this.props.trainsArriving}></Table></TabContainer>}
-        {value === 1 && <TabContainer><Table trainsDeparting={this.props.trainsDeparting}></Table></TabContainer>}
+        {value === 0 && <TabContainer>
+                          <Table  value={this.state.value}
+                                  searchedShortCode={this.props.searchedShortCode}
+                                  passengerStations={this.props.passengerStations}
+                                  trainsArriving={this.props.trainsArriving}></Table></TabContainer>}
+        {value === 1 && <TabContainer>
+                          <Table  value={this.state.value} 
+                                  searchedShortCode={this.props.searchedShortCode}
+                                  passengerStations={this.props.passengerStations} 
+                                  trainsDeparting={this.props.trainsDeparting}></Table></TabContainer>}
       </div>
     );
   }
