@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Table from './table';
+import TrainTable from './TrainTable';
 
 function TabContainer(props) {
   return (
@@ -45,15 +45,17 @@ class SimpleTabs extends React.Component {
             <Tab label="Lähtevät" />
           </Tabs>
         {value === 0 && <TabContainer>
-                          <Table  value={this.state.value}
-                                  searchedShortCode={this.props.searchedShortCode}
-                                  stations={this.props.stations}
-                                  trainsArriving={this.props.trainsArriving}></Table></TabContainer>}
+                          <TrainTable value={this.state.value} 
+                                      searchedShortCode={this.props.searchedShortCode}
+                                      stations={this.props.stations}
+                                      trainsArriving={this.props.trainsArriving}></TrainTable>
+                        </TabContainer>}
         {value === 1 && <TabContainer>
-                          <Table  value={this.state.value} 
-                                  searchedShortCode={this.props.searchedShortCode}
-                                  stations={this.props.stations} 
-                                  trainsDeparting={this.props.trainsDeparting}></Table></TabContainer>}
+                          <TrainTable value={this.state.value} 
+                                      searchedShortCode={this.props.searchedShortCode}
+                                      stations={this.props.stations}
+                                      trainsDeparting={this.props.trainsDeparting}></TrainTable>
+                        </TabContainer>}
       </div>
     );
   }

@@ -76,17 +76,17 @@ class Table extends React.Component {
         <table>
         <tbody>
           <tr>
-            <th>Juna</th>
-            <th>Lähtöasema</th>
-            <th>Pääteasema</th>
-            <th>Saapuu</th>
+            <th align="left">Juna</th>
+            <th align="left">Lähtöasema</th>
+            <th align="left">Pääteasema</th>
+            <th align="left">Saapuu</th>
           </tr>
         {this.props.trainsArriving.map((x) => 
             <tr key={x.trainNumber}>
-              <td><div>{x.trainType} {x.trainNumber}</div></td>
-              <td>{this.getStationName(x.timeTableRows[0].stationShortCode)}</td>
-              <td>{this.getStationName(x.timeTableRows[x.timeTableRows.length - 1].stationShortCode)}</td>
-              <td>{this.scheduledTime(x, true)}</td>
+              <td align="left"><div>{x.trainType} {x.trainNumber}</div></td>
+              <td align="left">{this.getStationName(x.timeTableRows[0].stationShortCode)}</td>
+              <td align="left">{this.getStationName(x.timeTableRows[x.timeTableRows.length - 1].stationShortCode)}</td>
+              <td align="left">{this.scheduledTime(x, true)}</td>
             </tr>
         )}
       </tbody>
@@ -96,17 +96,17 @@ class Table extends React.Component {
         <table>
         <tbody>
           <tr>
-            <th>Juna</th>
-            <th>Lähtöasema</th>
-            <th>Pääteasema</th>
-            <th>Lähtee</th>
+            <th align="left">Juna</th>
+            <th align="left">Lähtöasema</th>
+            <th align="left">Pääteasema</th>
+            <th align="left">Lähtee</th>
           </tr>
         {this.props.trainsDeparting.map((x) => 
             <tr key={x.trainNumber}>
-              <td><div>{x.trainType} {x.trainNumber}</div></td>
-              <td>{this.getStationName(x.timeTableRows[0].stationShortCode)}</td>
-              <td>{this.getStationName(x.timeTableRows[x.timeTableRows.length - 1].stationShortCode)}</td>
-              <td>{this.scheduledTime(x, false)}</td>
+              <td align="left"><div>{x.trainType} {x.trainNumber}</div></td>
+              <td align="left">{this.getStationName(x.timeTableRows[0].stationShortCode)}</td>
+              <td align="left">{this.getStationName(x.timeTableRows[x.timeTableRows.length - 1].stationShortCode)}</td>
+              <td align="left">{this.scheduledTime(x, false)}</td>
             </tr>
         )}
       </tbody>
