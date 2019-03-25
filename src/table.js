@@ -6,22 +6,30 @@ import Divider from '@material-ui/core/Divider';
 * Formats the date into a given timezone
 */
 function formatDate(date, timezone) {
-  date = moment(date);
-  date = date.tz(timezone).format();
-  return date;
+  try {
+    date = moment(date);
+    date = date.tz(timezone).format();
+    return date;
+  } catch {
+    return "Error: Date in wrong format";
+  }
 }
 
 /*
 * Converts the date in ISO8601 format into a time within a day
 */
 function convertTimeToString(ISO8601) {
-  let string = ISO8601.slice(11,13) + ':' + ISO8601.slice(14,16)/* + ' ' + 
-  ISO8601.slice(8,10) + '.' + ISO8601.slice(5,7) + '.' + ISO8601.slice(0,4)*/;
-  return string;
+  try {
+    let string = ISO8601.slice(11,13) + ':' + ISO8601.slice(14,16)/* + ' ' + 
+    ISO8601.slice(8,10) + '.' + ISO8601.slice(5,7) + '.' + ISO8601.slice(0,4)*/;
+    return string;
+  } catch {
+    return "Error: Date in wrong format";
+  }
 }
 
 /*
-* Calculates the arrival or departure of train
+Calculates the arrival or departure of train
 object === train
 true === arriving train
 false === departing train
@@ -134,17 +142,28 @@ function Table(props) {
           <div className="headerTitle">Saapuu</div>
         </div>
         <Divider />
-        {props.trainsArriving.map(row =>
-        <div key={row.trainType + row.trainNumber}>
-          <div className="row">
-            <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
-            <div className="rowContent">{getStationName(props, row.timeTableRows[0].stationShortCode)}</div>
-            <div className="rowContent">{getStationName(props, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
-            <div className="rowContent">{scheduledTime(props, row, true)}</div>
+        {props.trainsArriving.map(row => {
+          return row.cancelled ?   // If train is cancelled
+          <div key={row.trainType + row.trainNumber} className="cancelled">
+            <div className="row">
+              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
+              <div className="rowContent">{getStationName(props, row.timeTableRows[0].stationShortCode)}</div>
+              <div className="rowContent">{getStationName(props, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
+              <div className="rowContent">{scheduledTime(props, row, true)}</div>
+            </div>
+              <Divider />
           </div>
-            <Divider />
-        </div>
-        )}
+            :         // Else
+          <div key={row.trainType + row.trainNumber}>
+            <div className="row">
+              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
+              <div className="rowContent">{getStationName(props, row.timeTableRows[0].stationShortCode)}</div>
+              <div className="rowContent">{getStationName(props, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
+              <div className="rowContent">{scheduledTime(props, row, true)}</div>
+            </div>
+              <Divider />
+          </div>
+        })}
       </div>
   )} else {
     return (
@@ -156,17 +175,28 @@ function Table(props) {
           <div className="headerTitle">Lähtee</div>
         </div>
         <Divider />
-        {props.trainsDeparting.map(row =>
-        <div key={row.trainType + row.trainNumber}>
-          <div className="row">
-            <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
-            <div className="rowContent">{getStationName(props, row.timeTableRows[0].stationShortCode)}</div>
-            <div className="rowContent">{getStationName(props, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
-            <div className="rowContent">{scheduledTime(props, row, false)}</div>
+        {props.trainsDeparting.map(row => {
+          return row.cancelled ?   // If train is cancelled
+          <div key={row.trainType + row.trainNumber} className="cancelled">
+            <div className="row">
+              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
+              <div className="rowContent">{getStationName(props, row.timeTableRows[0].stationShortCode)}</div>
+              <div className="rowContent">{getStationName(props, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
+              <div className="rowContent">{scheduledTime(props, row, false)}</div>
+            </div>
+              <Divider />
           </div>
-            <Divider />
-        </div>
-        )}
+            :         // Else
+          <div key={row.trainType + row.trainNumber}>
+            <div className="row">
+              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
+              <div className="rowContent">{getStationName(props, row.timeTableRows[0].stationShortCode)}</div>
+              <div className="rowContent">{getStationName(props, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
+              <div className="rowContent">{scheduledTime(props, row, false)}</div>
+            </div>
+              <Divider />
+          </div>
+        })}
       </div>
     )}
 }

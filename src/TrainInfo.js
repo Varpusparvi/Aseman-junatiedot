@@ -4,7 +4,7 @@ import Axios from 'axios';
 import TextFieldAutosuggest from './TextFieldAutosuggest'
 import Tab from './Tab';
 
-// Material-ui, Jest, Axios, Moment Timezone , react-autosuggest, autosuggest-highlight,
+// Used Material-ui, Axios, Moment Timezone , react-autosuggest
 
 /*
 * Train arrival/departure view
@@ -22,7 +22,6 @@ class TrainInfo extends Component {
         }
         
         this.getStationsAxios();
-
         this.search = this.search.bind(this);
     }
 
@@ -93,17 +92,19 @@ class TrainInfo extends Component {
                     }
                     return dateA - dateB;
                 })
-            }
-            // Check against allowedTypes
-            for (let i = 0; i < trainsArriving.length; i++) {
-                if (!allowedTypes.includes(trainsArriving[i].trainType)) {
-                    trainsArriving.splice(i, 1 );
-                    i--;
+
+                // Check against allowedTypes
+                for (let i = 0; i < trainsArriving.length; i++) {
+                    if (!allowedTypes.includes(trainsArriving[i].trainType)) {
+                        trainsArriving.splice(i, 1 );
+                        i--;
+                    }
                 }
-            }
-            // Shorten to "amountToShow"
-            for (let i = 0; trainsArriving.length > amountToShow; i++) {
-                trainsArriving.pop();
+
+                // Shorten to "amountToShow"
+                for (let i = 0; trainsArriving.length > amountToShow; i++) {
+                    trainsArriving.pop();
+                }
             }
             // Departure, Sort the trains by date
             let trainsDeparting = [];
@@ -158,21 +159,21 @@ class TrainInfo extends Component {
                     }
                 return dateA - dateB;
                 })
-            }
-            // Check against allowedTypes
-            for (let i = 0; i < trainsDeparting.length; i++) {
-                if (!allowedTypes.includes(trainsDeparting[i].trainType)) {
-                    trainsDeparting.splice(i, 1 );
-                    i--;
+
+                // Check against allowedTypes
+                for (let i = 0; i < trainsDeparting.length; i++) {
+                    if (!allowedTypes.includes(trainsDeparting[i].trainType)) {
+                        trainsDeparting.splice(i, 1 );
+                        i--;
+                    }
+                }
+
+                // Shorten to "amountToShow"
+                for (let i = 0; trainsDeparting.length > amountToShow; i++) {
+                    trainsDeparting.pop();
                 }
             }
-            // Shorten to "amountToShow"
-            for (let i = 0; trainsDeparting.length > amountToShow; i++) {
-                trainsDeparting.pop();
-            }
-
-            console.log(trainsArriving);
-            console.log(trainsDeparting);
+            
             this.setState({
                 trainsArriving : trainsArriving,
                 trainsDeparting : trainsDeparting

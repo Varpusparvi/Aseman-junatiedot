@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.9.2",
-    "autosuggest-highlight": "^3.1.1",
     "axios": "^0.18.0",
     "moment-timezone": "^0.5.23",
     "react": "^16.8.4",

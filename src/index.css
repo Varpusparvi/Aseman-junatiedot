@@ -94,6 +94,10 @@
     color: red;
     font-weight: bold;
   }
+  
+  .cancelled {
+    color: rgb(204, 204, 204);
+  }
 
   .table {
     display: flex;

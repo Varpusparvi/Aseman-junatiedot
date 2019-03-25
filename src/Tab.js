@@ -4,14 +4,19 @@ import Table from './Table';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
-    button: {
+    buttonActive: {
+        textTransform: 'none',
         color: 'green',
-        fontFamily: [
-            "Helvetica", "sans-serif",
-        ]
+    },
+    buttonInactive: {
+        textTransform: 'none',
+        color: 'black',
     }
   };
 
+/*
+*   Tab component where the tab buttons are
+*/
 class Tab extends React.Component {
     constructor(props) {
         super(props);
@@ -21,6 +26,9 @@ class Tab extends React.Component {
         }
     }
 
+    /*
+    *   Handle select tab
+    */
     handleChange = (event) => {
         if (event.target.textContent === "Saapuvat" && this.state.value === 1) {
             this.setState({
@@ -36,12 +44,13 @@ class Tab extends React.Component {
 
     render() {
         const value = this.state.value;
+        const {classes} = this.props;
         if (value === 0) {
             return (
                 <div className="tabContainer">
                     <div className="tab">
-                        <Button onClick={this.handleChange} className={this.props.classes.button}>Saapuvat</Button>
-                        <Button onClick={this.handleChange}>Lähtevät</Button>
+                        <Button onClick={this.handleChange} className={classes.buttonActive}>Saapuvat</Button>
+                        <Button onClick={this.handleChange} className={classes.buttonInactive}>Lähtevät</Button>
                     </div>
                     <div>
                         <Table value={this.state.value} 
@@ -55,8 +64,8 @@ class Tab extends React.Component {
             return (
                 <div className="tabContainer">
                     <div className="tab">
-                        <Button onClick={this.handleChange}>Saapuvat</Button>
-                        <Button onClick={this.handleChange} className={this.props.classes.button}>Lähtevät</Button>
+                        <Button onClick={this.handleChange} className={classes.buttonInactive}>Saapuvat</Button>
+                        <Button onClick={this.handleChange} className={classes.buttonActive}>Lähtevät</Button>
                     </div>
                     <div>
                         <Table value={this.state.value} 
