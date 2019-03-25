@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './index.css';
-import SimpleTabs from './tabs';
 import Axios from 'axios';
 import TextFieldAutosuggest from './TextFieldAutosuggest'
+import Tab from './Tab';
 
 // Material-ui, Jest, Axios, Moment Timezone , react-autosuggest, autosuggest-highlight,
 
@@ -242,10 +242,10 @@ class TrainInfo extends Component {
                                                 search={this.search}></TextFieldAutosuggest>
                     </div>
                     <div className="table">
-                        <SimpleTabs searchedShortCode={this.state.searchedShortCode} 
+                        <Tab searchedShortCode={this.state.searchedShortCode} 
                                     stations={this.state.stations} 
                                     trainsArriving={this.state.trainsArriving} 
-                                    trainsDeparting={this.state.trainsDeparting}></SimpleTabs>
+                                    trainsDeparting={this.state.trainsDeparting}></Tab>
                     </div>
                 </div>
             </div>

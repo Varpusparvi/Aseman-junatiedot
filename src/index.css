@@ -94,20 +94,82 @@
     color: red;
     font-weight: bold;
   }
+
+  .table {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-evenly;
+  }
+
+  .headerTitle, .headerTitleTrain {
+    display: flex;
+    flex-grow: 0.25;
+  }
+
+  .row {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-evenly;
+  }
+
+  .rowContent, .rowContentTrain {
+    display: flex;
+    flex-grow: 0.25;
+  }
 }
 @media all and (max-width: 499px) {
-  tr, th, td {
-    padding: 3px;
+  .table {
+    width: 100%;
   }
 
+  .headerTitle {
+    padding: 5px;
+    width: 85px;
+  }
+
+  .headerTitleTrain {
+    padding: 5px; 
+    width: 30px;
+  }
+
+  .rowContent {
+    padding: 5px;
+    width: 85px;
+  }
+
+  .rowContentTrain {
+    padding: 5px; 
+    width: 30px;
+  }
 }
+
 @media all and (min-width: 500px) {
-  tr, td, th {
-    padding: 3px;
+  .table {
+    width: 500px;
   }
 
-  .actualTime {
-    color: red;
-    font-weight: bold;
+  .headerTitle {
+    padding: 10px;
+    width: 85px;
+  }
+
+  .headerTitleTrain {
+    padding: 10px; 
+    width: 60px;
+  }
+
+  .rowContent {
+    padding: 10px;
+    width: 85px;
+  }
+
+  .rowContentTrain {
+    padding: 10px; 
+    width: 60px;
   }
 }
