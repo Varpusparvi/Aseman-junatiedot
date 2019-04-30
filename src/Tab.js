@@ -1,18 +1,6 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import Table from './Table';
-import { withStyles } from '@material-ui/core/styles';
-
-const styles = {
-    buttonActive: {
-        textTransform: 'none',
-        color: 'green',
-    },
-    buttonInactive: {
-        textTransform: 'none',
-        color: 'black',
-    }
-  };
+import Button from 'react-bootstrap/Button';
 
 /*
 *   Tab component where the tab buttons are
@@ -49,8 +37,8 @@ class Tab extends React.Component {
             return (
                 <div className="tabContainer">
                     <div className="tab">
-                        <Button onClick={this.handleChange} className={classes.buttonActive}>Saapuvat</Button>
-                        <Button onClick={this.handleChange} className={classes.buttonInactive}>Lähtevät</Button>
+                        <Button variant="light" onClick={this.handleChange} className="buttonActive">Saapuvat</Button>
+                        <Button variant="light" onClick={this.handleChange} className="buttonInactive">Lähtevät</Button>
                     </div>
                     <div>
                         <Table value={this.state.value} 
@@ -64,8 +52,8 @@ class Tab extends React.Component {
             return (
                 <div className="tabContainer">
                     <div className="tab">
-                        <Button onClick={this.handleChange} className={classes.buttonInactive}>Saapuvat</Button>
-                        <Button onClick={this.handleChange} className={classes.buttonActive}>Lähtevät</Button>
+                        <Button variant="light" onClick={this.handleChange} className="buttonActive">Saapuvat</Button>
+                        <Button variant="light" onClick={this.handleChange} className="buttonInactive">Lähtevät</Button>
                     </div>
                     <div>
                         <Table value={this.state.value} 
@@ -79,4 +67,4 @@ class Tab extends React.Component {
     }
 }
 
-export default withStyles(styles)(Tab);
+export default Tab;

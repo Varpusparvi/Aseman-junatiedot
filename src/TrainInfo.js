@@ -21,8 +21,11 @@ class TrainInfo extends Component {
             value : ""
         }
         
-        this.getStationsAxios();
         this.search = this.search.bind(this);
+    }
+
+    componentDidMount() {
+        this.getStationsAxios();
     }
 
     /*

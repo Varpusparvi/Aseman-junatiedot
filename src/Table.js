@@ -30,59 +30,61 @@ function convertTimeToString(ISO8601) {
 
 /*
 Calculates the arrival or departure of train
-object === train
+train
+
+trainArriving:
 true === arriving train
 false === departing train
 */
-function scheduledTime(props, object, bool) {
+function scheduledTime(props, train, trainArriving) {
   let scheduledTime;
   let actualTime;
   let cancelled;
-  if (bool === true) {  // If calculating arrival
-      for (let i = 0; i < object.timeTableRows.length; i++) {
-          if (object.timeTableRows[i].stationShortCode === props.searchedShortCode &&
-              object.timeTableRows[i].type === "ARRIVAL") {
-              if (object.timeTableRows[i].liveEstimateTime === undefined) {
-                  scheduledTime = new Date(object.timeTableRows[i].scheduledTime);
+  if (trainArriving === true) {  // If calculating arrival
+      for (let i = 0; i < train.timeTableRows.length; i++) {
+          if (train.timeTableRows[i].stationShortCode === props.searchedShortCode &&
+              train.timeTableRows[i].type === "ARRIVAL") {
+              if (train.timeTableRows[i].liveEstimateTime === undefined) {
+                  scheduledTime = new Date(train.timeTableRows[i].scheduledTime);
                   scheduledTime = formatDate(scheduledTime, "Europe/Helsinki");
                   scheduledTime = convertTimeToString(scheduledTime);
-              } else if (object.cancelled === true) {
+              } else if (train.cancelled === true) {
                   cancelled = true;
-                  scheduledTime = new Date(object.timeTableRows[i].scheduledTime);
+                  scheduledTime = new Date(train.timeTableRows[i].scheduledTime);
                   scheduledTime = formatDate(scheduledTime, "Europe/Helsinki");
                   scheduledTime = convertTimeToString(scheduledTime);
               } else {
-                  if (object.timeTableRows[i].differenceInMinutes > 0) {
-                      actualTime = new Date(object.timeTableRows[i].liveEstimateTime);
+                  if (train.timeTableRows[i].differenceInMinutes > 0) {
+                      actualTime = new Date(train.timeTableRows[i].liveEstimateTime);
                       actualTime = formatDate(actualTime, "Europe/Helsinki");
                       actualTime = convertTimeToString(actualTime);
                   }
-                  scheduledTime = new Date(object.timeTableRows[i].scheduledTime);
+                  scheduledTime = new Date(train.timeTableRows[i].scheduledTime);
                   scheduledTime = formatDate(scheduledTime, "Europe/Helsinki");
                   scheduledTime = convertTimeToString(scheduledTime);
               }
           }
       }
   } else {              // If calculating departure
-      for (let i = 0; i < object.timeTableRows.length; i++) {
-          if (object.timeTableRows[i].stationShortCode === props.searchedShortCode &&
-              object.timeTableRows[i].type === "DEPARTURE") {
-              if (object.timeTableRows[i].liveEstimateTime === undefined) {
-                  scheduledTime = new Date(object.timeTableRows[i].scheduledTime);
+      for (let i = 0; i < train.timeTableRows.length; i++) {
+          if (train.timeTableRows[i].stationShortCode === props.searchedShortCode &&
+              train.timeTableRows[i].type === "DEPARTURE") {
+              if (train.timeTableRows[i].liveEstimateTime === undefined) {
+                  scheduledTime = new Date(train.timeTableRows[i].scheduledTime);
                   scheduledTime = formatDate(scheduledTime, "Europe/Helsinki");
                   scheduledTime = convertTimeToString(scheduledTime);
-              } else if (object.cancelled === true) {
+              } else if (train.cancelled === true) {
                   cancelled = true;
-                  scheduledTime = new Date(object.timeTableRows[i].scheduledTime);
+                  scheduledTime = new Date(train.timeTableRows[i].scheduledTime);
                   scheduledTime = formatDate(scheduledTime, "Europe/Helsinki");
                   scheduledTime = convertTimeToString(scheduledTime);
               } else {
-                  if (object.timeTableRows[i].differenceInMinutes > 0) {
-                      actualTime = new Date(object.timeTableRows[i].liveEstimateTime);
+                  if (train.timeTableRows[i].differenceInMinutes > 0) {
+                      actualTime = new Date(train.timeTableRows[i].liveEstimateTime);
                       actualTime = formatDate(actualTime, "Europe/Helsinki");
                       actualTime = convertTimeToString(actualTime);
                   }
-                  scheduledTime = new Date(object.timeTableRows[i].scheduledTime);
+                  scheduledTime = new Date(train.timeTableRows[i].scheduledTime);
                   scheduledTime = formatDate(scheduledTime, "Europe/Helsinki");
                   scheduledTime = convertTimeToString(scheduledTime);
               }
@@ -135,6 +137,7 @@ function Table(props) {
   if (props.value === 0) {
     return(
       <div className="table">
+      <Divider />
         <div className="header">
           <div className="headerTitleTrain">Juna</div>
           <div className="headerTitle">Lähtöasema</div>
@@ -168,6 +171,7 @@ function Table(props) {
   )} else {
     return (
       <div className="table">
+      <Divider />
         <div className="header">
           <div className="headerTitleTrain">Juna</div>
           <div className="headerTitle">Lähtöasema</div>
