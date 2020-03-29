@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import TrainInfo from './TrainInfo';
+import {App} from './TrainInfo';
 
-ReactDOM.render(<TrainInfo />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));

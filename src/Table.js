@@ -3,9 +3,85 @@ import moment from 'moment-timezone';
 import Divider from '@material-ui/core/Divider';
 
 /*
+* Table for arriving and departing trains
+*/
+const Table = ({value, searchedShortCode, stations, trainsArriving, trainsDeparting}) => {
+
+  if (value === 0) {
+    return(
+      <div className="table">
+      <Divider />
+        <div className="header">
+          <div className="headerTitleTrain">Juna</div>
+          <div className="headerTitle">Lähtöasema</div>
+          <div className="headerTitle">Pääteasema</div>
+          <div className="headerTitle">Saapuu</div>
+        </div>
+        <Divider />
+        {trainsArriving.map(row => {
+          return row.cancelled ?   // If train is cancelled
+          <div key={row.trainType + row.trainNumber} className="cancelled">
+            <div className="row">
+              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
+              <div className="rowContent">{getStationName(stations, row.timeTableRows[0].stationShortCode)}</div>
+              <div className="rowContent">{getStationName(stations, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
+              <div className="rowContent">{scheduledTime(searchedShortCode, row, true)}</div>
+            </div>
+              <Divider />
+          </div>
+            :         // Else
+          <div key={row.trainType + row.trainNumber}>
+            <div className="row">
+              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
+              <div className="rowContent">{getStationName(stations, row.timeTableRows[0].stationShortCode)}</div>
+              <div className="rowContent">{getStationName(stations, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
+              <div className="rowContent">{scheduledTime(searchedShortCode, row, true)}</div>
+            </div>
+              <Divider />
+          </div>
+        })}
+      </div>
+  )} else {
+    return (
+      <div className="table">
+      <Divider />
+        <div className="header">
+          <div className="headerTitleTrain">Juna</div>
+          <div className="headerTitle">Lähtöasema</div>
+          <div className="headerTitle">Pääteasema</div>
+          <div className="headerTitle">Lähtee</div>
+        </div>
+        <Divider />
+        {trainsDeparting.map(row => {
+          return row.cancelled ?   // If train is cancelled
+          <div key={row.trainType + row.trainNumber} className="cancelled">
+            <div className="row">
+              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
+              <div className="rowContent">{getStationName(stations, row.timeTableRows[0].stationShortCode)}</div>
+              <div className="rowContent">{getStationName(stations, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
+              <div className="rowContent">{scheduledTime(searchedShortCode, row, false)}</div>
+            </div>
+              <Divider />
+          </div>
+            :         // Else
+          <div key={row.trainType + row.trainNumber}>
+            <div className="row">
+              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
+              <div className="rowContent">{getStationName(stations, row.timeTableRows[0].stationShortCode)}</div>
+              <div className="rowContent">{getStationName(stations, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
+              <div className="rowContent">{scheduledTime(searchedShortCode, row, false)}</div>
+            </div>
+              <Divider />
+          </div>
+        })}
+      </div>
+    )}
+}
+
+/*
 * Formats the date into a given timezone
 */
-function formatDate(date, timezone) {
+const formatDate = (date, timezone) => {
   try {
     date = moment(date);
     date = date.tz(timezone).format();
@@ -18,7 +94,7 @@ function formatDate(date, timezone) {
 /*
 * Converts the date in ISO8601 format into a time within a day
 */
-function convertTimeToString(ISO8601) {
+const convertTimeToString = (ISO8601) => {
   try {
     let string = ISO8601.slice(11,13) + ':' + ISO8601.slice(14,16)/* + ' ' + 
     ISO8601.slice(8,10) + '.' + ISO8601.slice(5,7) + '.' + ISO8601.slice(0,4)*/;
@@ -36,13 +112,13 @@ trainArriving:
 true === arriving train
 false === departing train
 */
-function scheduledTime(props, train, trainArriving) {
+const scheduledTime = (searchedShortCode, train, trainArriving) => {
   let scheduledTime;
   let actualTime;
   let cancelled;
   if (trainArriving === true) {  // If calculating arrival
       for (let i = 0; i < train.timeTableRows.length; i++) {
-          if (train.timeTableRows[i].stationShortCode === props.searchedShortCode &&
+          if (train.timeTableRows[i].stationShortCode === searchedShortCode &&
               train.timeTableRows[i].type === "ARRIVAL") {
               if (train.timeTableRows[i].liveEstimateTime === undefined) {
                   scheduledTime = new Date(train.timeTableRows[i].scheduledTime);
@@ -67,7 +143,7 @@ function scheduledTime(props, train, trainArriving) {
       }
   } else {              // If calculating departure
       for (let i = 0; i < train.timeTableRows.length; i++) {
-          if (train.timeTableRows[i].stationShortCode === props.searchedShortCode &&
+          if (train.timeTableRows[i].stationShortCode === searchedShortCode &&
               train.timeTableRows[i].type === "DEPARTURE") {
               if (train.timeTableRows[i].liveEstimateTime === undefined) {
                   scheduledTime = new Date(train.timeTableRows[i].scheduledTime);
@@ -117,10 +193,10 @@ function scheduledTime(props, train, trainArriving) {
 /*
 *   Gets the station full name from the given stationShortCode
 */
-function getStationName(props, stationShortCode) {
-  for (let i = 0; i < props.stations.length; i++) {
-      if (stationShortCode === props.stations[i].stationShortCode) {
-      let stationName = props.stations[i].stationName;
+const getStationName = (stations, stationShortCode) => {
+  for (let i = 0; i < stations.length; i++) {
+      if (stationShortCode === stations[i].stationShortCode) {
+      let stationName = stations[i].stationName;
       return (
           <div>
           {stationName}
@@ -128,81 +204,6 @@ function getStationName(props, stationShortCode) {
       );
       }
   }
-}
-
-/*
-* Table for arriving and departing trains
-*/
-function Table(props) {
-  if (props.value === 0) {
-    return(
-      <div className="table">
-      <Divider />
-        <div className="header">
-          <div className="headerTitleTrain">Juna</div>
-          <div className="headerTitle">Lähtöasema</div>
-          <div className="headerTitle">Pääteasema</div>
-          <div className="headerTitle">Saapuu</div>
-        </div>
-        <Divider />
-        {props.trainsArriving.map(row => {
-          return row.cancelled ?   // If train is cancelled
-          <div key={row.trainType + row.trainNumber} className="cancelled">
-            <div className="row">
-              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
-              <div className="rowContent">{getStationName(props, row.timeTableRows[0].stationShortCode)}</div>
-              <div className="rowContent">{getStationName(props, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
-              <div className="rowContent">{scheduledTime(props, row, true)}</div>
-            </div>
-              <Divider />
-          </div>
-            :         // Else
-          <div key={row.trainType + row.trainNumber}>
-            <div className="row">
-              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
-              <div className="rowContent">{getStationName(props, row.timeTableRows[0].stationShortCode)}</div>
-              <div className="rowContent">{getStationName(props, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
-              <div className="rowContent">{scheduledTime(props, row, true)}</div>
-            </div>
-              <Divider />
-          </div>
-        })}
-      </div>
-  )} else {
-    return (
-      <div className="table">
-      <Divider />
-        <div className="header">
-          <div className="headerTitleTrain">Juna</div>
-          <div className="headerTitle">Lähtöasema</div>
-          <div className="headerTitle">Pääteasema</div>
-          <div className="headerTitle">Lähtee</div>
-        </div>
-        <Divider />
-        {props.trainsDeparting.map(row => {
-          return row.cancelled ?   // If train is cancelled
-          <div key={row.trainType + row.trainNumber} className="cancelled">
-            <div className="row">
-              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
-              <div className="rowContent">{getStationName(props, row.timeTableRows[0].stationShortCode)}</div>
-              <div className="rowContent">{getStationName(props, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
-              <div className="rowContent">{scheduledTime(props, row, false)}</div>
-            </div>
-              <Divider />
-          </div>
-            :         // Else
-          <div key={row.trainType + row.trainNumber}>
-            <div className="row">
-              <div className="rowContentTrain">{row.trainType} {row.trainNumber}</div>
-              <div className="rowContent">{getStationName(props, row.timeTableRows[0].stationShortCode)}</div>
-              <div className="rowContent">{getStationName(props, row.timeTableRows[row.timeTableRows.length - 1].stationShortCode)}</div>
-              <div className="rowContent">{scheduledTime(props, row, false)}</div>
-            </div>
-              <Divider />
-          </div>
-        })}
-      </div>
-    )}
 }
 
 export default Table;

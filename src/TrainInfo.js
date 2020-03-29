@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import {useState, useEffect} from 'react';
 import './index.css';
 import Axios from 'axios';
 import TextFieldAutosuggest from './TextFieldAutosuggest'
@@ -6,32 +7,37 @@ import Tab from './Tab';
 
 // Used Material-ui, Axios, Moment Timezone , react-autosuggest
 
-/*
-* Train arrival/departure view
-*/
-class TrainInfo extends Component {
-    constructor(props) {
-        super(props);
+export const App = () => {
+    var [trainsArrivingParsed, setTrainsArrivingParsed] = useState([]);
+    var [trainsDepartingParsed, setTrainsDepartingParsed] = useState([]);
+    var [stations, setStations] = useState([]);
+    var [searchedShortCode, setSearchedShortCode] = useState("");
+    var [value, setValue] = useState("");
+    var [tabValue, setTabValue] = useState(0);
 
-        this.state = {
-            trainsArriving : [],
-            trainsDeparting : [],
-            stations: [],
-            searchedShortCode: "",
-            value : ""
-        }
-        
-        this.search = this.search.bind(this);
+    
+    /*
+    *   GETs station API for stationShortCodes
+    */
+    const getStationsAxios = async () => {
+        Axios.get('https://rata.digitraffic.fi/api/v1/metadata/stations')
+        .then((response) => {
+            let stationsData = [];
+            for (let i = 0; i < response.data.length; i++) {
+                if (response.data[i].passengerTraffic === true) {
+                    stationsData.push(response.data[i]);
+                }
+            }
+            setStations(stationsData);
+            console.log(stationsData);
+        })
     }
 
-    componentDidMount() {
-        this.getStationsAxios();
-    }
 
     /*
     *   GETs train API for specific station by stationCode
     */
-    getTrainsAxios(stationCode) {
+    const getTrainsAxios = (stationCode) => {
         const minutesToTrack = 1440;    // 0-1440 minutes
         const amountToShow = 10;
         const allowedTypes = ["IC", "P" ,"S", "R"]; // Allowed trainTypes
@@ -177,28 +183,11 @@ class TrainInfo extends Component {
                 }
             }
             
-            this.setState({
-                trainsArriving : trainsArriving,
-                trainsDeparting : trainsDeparting
-            })
-        })
-    }
-
-    /*
-    *   GETs station API for stationShortCodes
-    */
-    getStationsAxios() {
-        Axios.get('https://rata.digitraffic.fi/api/v1/metadata/stations')
-        .then((response) => {
-            let stations = [];
-            for (let i = 0; i < response.data.length; i++) {
-                if (response.data[i].passengerTraffic === true) {
-                    stations.push(response.data[i]);
-                }
-            }
-            this.setState({
-                stations : response.data
-            })
+            setTrainsArrivingParsed(trainsArriving);
+            setTrainsDepartingParsed(trainsDeparting);
+            console.log("Response: ",response);
+            console.log("Arriving: ",trainsArriving);
+            console.log("Departing: ",trainsDeparting);
         })
     }
 
@@ -206,56 +195,61 @@ class TrainInfo extends Component {
     /*
     * Searches VRs API for matches and sets them in state
     */
-    search(haku) {
-        if (this.state.stations === []) {
-            console.log("Virhe: this.state.stations === []")
+    const search = (haku) => {
+        console.log(haku);
+        if (stations === [] || stations === undefined) {
+            console.log("Virhe: stations empty or undefined")
             return;
         }
         haku = haku.toLowerCase().trim();
-        for (let i = 0; i < this.state.stations.length; i++) {
-            if (this.state.stations[i].stationName.toLowerCase() === haku) {
-                this.setState({
-                    searchedShortCode : this.state.stations[i].stationShortCode
-                })
-                this.getTrainsAxios(this.state.stations[i].stationShortCode);
+        console.log(stations.length);
+        for (let i = 0; i < stations.length; i++) {
+            console.log(stations[i].stationName.toLowerCase());
+            if (stations[i].stationName.toLowerCase() === haku) {
+                setSearchedShortCode(stations[i].stationShortCode);
+                getTrainsAxios(stations[i].stationShortCode);
             }
         }
     }
 
-    handleChange = () => event => {
-        this.setState({
-          value: event.target.value,
-        });
-        this.search(event.target.value);
-      };
-
-    render() {
-        return (
-            <div className="main">
-                <div>
-                    <div className="topBar" id="topBar">
-                        <div className="title">Aseman junatiedot</div>
-                        <div className="cc4">Liikennetietojen lähde Traffic Management Finland / digitraffic.fi, lisenssi <a href="https://creativecommons.org/licenses/by/4.0/legalcode.fi">CC 4.0 BY</a></div>
-                    </div>
-                </div>
-                <div className="content">
-                    <div className="searchbar">
-                        <div className="searchTitle">Hae aseman nimellä</div>
-                        <TextFieldAutosuggest suggestions={this.state.stations} 
-                                                onChange={this.handleChange}
-                                                search={this.search}></TextFieldAutosuggest>
-                    </div>
-                    <div className="table">
-                        <Tab searchedShortCode={this.state.searchedShortCode} 
-                                    stations={this.state.stations} 
-                                    trainsArriving={this.state.trainsArriving} 
-                                    trainsDeparting={this.state.trainsDeparting}></Tab>
-                    </div>
-                </div>
-            </div>
-        )
+    /**
+     * handles change in search field
+     */
+    const handleChange = () => e => {
+        setValue(e.target.value);
+        search(value);
     }
+
+    // DidComponentMount
+    useEffect(() => {
+        getStationsAxios();
+    }, [])
+
+
+    return(
+        <div className="main">
+        <div>
+            <div className="topBar" id="topBar">
+                <div className="title">Aseman junatiedot</div>
+                <div className="cc4">Liikennetietojen lähde Traffic Management Finland / digitraffic.fi, lisenssi <a href="https://creativecommons.org/licenses/by/4.0/legalcode.fi">CC 4.0 BY</a></div>
+            </div>
+        </div>
+        <div className="content">
+            <div className="searchbar">
+                <div className="searchTitle">Hae aseman nimellä</div>
+                <TextFieldAutosuggest suggestions={stations} 
+                    onChange={handleChange}
+                    search={search}></TextFieldAutosuggest>
+            </div>
+            <div className="table">
+                <Tab searchedShortCode={searchedShortCode} 
+                    stations={stations} 
+                    trainsArriving={trainsArrivingParsed} 
+                    trainsDeparting={trainsDepartingParsed}
+                    tabValue={tabValue}
+                    setTabValue={setTabValue}></Tab>
+            </div>
+        </div>
+    </div>
+    );
 }
-
-
-export default TrainInfo;
